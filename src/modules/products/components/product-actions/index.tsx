@@ -172,15 +172,15 @@ export default function ProductActions({
             !isValidVariant
           }
           variant="primary"
-          className="w-full h-10"
+          className="h-12 w-full !rounded-base !border-0 !bg-[var(--color-red)] !text-[var(--color-text)] uppercase tracking-wide transition-colors duration-200 hover:!bg-[var(--color-red-hover)] disabled:!opacity-50"
           isLoading={isAdding}
           data-testid="add-product-button"
         >
           {!selectedVariant && !options
-            ? "Select variant"
+            ? "Выберите вариант"
             : !inStock || !isValidVariant
-            ? "Out of stock"
-            : "Add to cart"}
+            ? "Нет в наличии"
+            : "Добавить в корзину"}
         </Button>
         <MobileActions
           product={product}

@@ -2,13 +2,16 @@ import { Metadata } from "next"
 
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
+import CollectionBanner from "@modules/home/components/collection-banner"
+import Manifesto from "@modules/home/components/manifesto"
+import Advantages from "@modules/home/components/advantages"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 
 export const metadata: Metadata = {
-  title: "Medusa Next.js Starter Template",
+  title: "РАССВЕТ — тактическая одежда и ограниченные коллекции",
   description:
-    "A performant frontend ecommerce starter template with Next.js 15 and Medusa.",
+    "Тактическая эстетика, городская форма и ограниченные коллекции одежды РАССВЕТ.",
 }
 
 export default async function Home(props: {
@@ -31,11 +34,24 @@ export default async function Home(props: {
   return (
     <>
       <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
+
+      <CollectionBanner collection={collections[0]} />
+
+      <section className="content-container section-y">
+        <div className="mb-12 flex flex-col gap-3">
+          <span className="eyebrow">Избранные товары</span>
+          <h2 className="heading-display text-[clamp(1.75rem,4vw,2.75rem)] leading-tight">
+            Отобрано вручную
+          </h2>
+        </div>
+        <ul className="flex flex-col gap-y-20">
           <FeaturedProducts collections={collections} region={region} />
         </ul>
-      </div>
+      </section>
+
+      <Manifesto />
+
+      <Advantages />
     </>
   )
 }

@@ -1,36 +1,68 @@
 import { listCategories } from "@lib/data/categories"
-import { listCollections } from "@lib/data/collections"
 import { Text, clx } from "@medusajs/ui"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
   const productCategories = await listCategories()
 
   return (
-    <footer className="border-t border-ui-border-base w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
+    <footer className="w-full border-t border-ui-border-base bg-ui-bg-base">
+      <div className="content-container flex w-full flex-col">
+        <div className="flex flex-col gap-y-12 py-16 small:flex-row small:justify-between small:py-24">
+          <div className="flex max-w-sm flex-col gap-y-5">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+              className="heading-display text-2xl uppercase tracking-[0.2em] text-ui-fg-base"
             >
-              Medusa Store
+              РАССВЕТ
             </LocalizedClientLink>
+            <Text className="text-sm leading-relaxed text-ui-fg-subtle">
+              Тактическая эстетика и городская форма. Ограниченные коллекции для
+              тех, кто двигается через город как через местность.
+            </Text>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
+
+          <div className="grid grid-cols-2 gap-10 text-sm small:grid-cols-3 md:gap-x-16">
+            <div className="flex flex-col gap-y-3">
+              <span className="text-xs uppercase tracking-[0.2em] text-ui-fg-interactive">
+                Магазин
+              </span>
+              <ul className="flex flex-col gap-y-2 text-ui-fg-subtle">
+                <li>
+                  <LocalizedClientLink
+                    href="/store"
+                    className="transition-colors hover:text-ui-fg-base"
+                  >
+                    Каталог
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/store"
+                    className="transition-colors hover:text-ui-fg-base"
+                  >
+                    Коллекции
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/about"
+                    className="transition-colors hover:text-ui-fg-base"
+                  >
+                    О бренде
+                  </LocalizedClientLink>
+                </li>
+              </ul>
+            </div>
+
+            {productCategories && productCategories.length > 0 && (
+              <div className="flex flex-col gap-y-3">
+                <span className="text-xs uppercase tracking-[0.2em] text-ui-fg-interactive">
+                  Категории
                 </span>
                 <ul
-                  className="grid grid-cols-1 gap-2"
+                  className="grid grid-cols-1 gap-2 text-ui-fg-subtle"
                   data-testid="footer-categories"
                 >
                   {productCategories?.slice(0, 6).map((c) => {
@@ -52,7 +84,7 @@ export default async function Footer() {
                       >
                         <LocalizedClientLink
                           className={clx(
-                            "hover:text-ui-fg-base",
+                            "transition-colors hover:text-ui-fg-base",
                             children && "txt-small-plus"
                           )}
                           href={`/categories/${c.handle}`}
@@ -61,12 +93,12 @@ export default async function Footer() {
                           {c.name}
                         </LocalizedClientLink>
                         {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
+                          <ul className="ml-3 grid grid-cols-1 gap-2">
                             {children &&
                               children.map((child) => (
                                 <li key={child.id}>
                                   <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
+                                    className="transition-colors hover:text-ui-fg-base"
                                     href={`/categories/${child.handle}`}
                                     data-testid="category-link"
                                   >
@@ -82,74 +114,80 @@ export default async function Footer() {
                 </ul>
               </div>
             )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
+
+            <div className="flex flex-col gap-y-3">
+              <span className="text-xs uppercase tracking-[0.2em] text-ui-fg-interactive">
+                Сервис
+              </span>
+              <ul className="flex flex-col gap-y-2 text-ui-fg-subtle">
+                <li>
+                  <LocalizedClientLink
+                    href="/shipping"
+                    className="transition-colors hover:text-ui-fg-base"
+                  >
+                    Доставка и оплата
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/returns"
+                    className="transition-colors hover:text-ui-fg-base"
+                  >
+                    Возврат
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/account"
+                    className="transition-colors hover:text-ui-fg-base"
+                  >
+                    Аккаунт
+                  </LocalizedClientLink>
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-y-3">
+              <span className="text-xs uppercase tracking-[0.2em] text-ui-fg-interactive">
+                Контакты
+              </span>
+              <ul className="flex flex-col gap-y-2 text-ui-fg-subtle">
                 <li>
                   <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                    href="#"
+                    className="transition-colors hover:text-[var(--color-red)]"
                   >
-                    GitHub
+                    Telegram
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                    href="#"
+                    className="transition-colors hover:text-[var(--color-red)]"
                   >
-                    Documentation
+                    VK
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                    href="mailto:hello@rassvet.example"
+                    className="transition-colors hover:text-[var(--color-red)]"
                   >
-                    Source code
+                    Email
                   </a>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
+
+        <div className="flex w-full flex-col gap-y-3 border-t border-ui-border-base py-8 text-ui-fg-muted small:flex-row small:items-center small:justify-between">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
+            © {new Date().getFullYear()} РАССВЕТ. Все права защищены.
           </Text>
-          <MedusaCTA />
+          <Text className="txt-compact-small uppercase tracking-[0.2em]">
+            Тактическая эстетика · Городская форма
+          </Text>
         </div>
       </div>
     </footer>

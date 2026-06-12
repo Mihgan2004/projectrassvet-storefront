@@ -8,28 +8,28 @@ export default function CheckoutLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="w-full bg-white relative small:min-h-screen">
-      <div className="h-16 bg-white border-b ">
-        <nav className="flex h-full items-center content-container justify-between">
+    <div className="relative w-full bg-ui-bg-base small:min-h-screen">
+      <div className="h-20 border-b border-ui-border-base bg-[rgba(18,19,18,0.8)] backdrop-blur-xl">
+        <nav className="content-container flex h-full items-center justify-between">
           <LocalizedClientLink
             href="/cart"
-            className="text-small-semi text-ui-fg-base flex items-center gap-x-2 uppercase flex-1 basis-0"
+            className="flex flex-1 basis-0 items-center gap-x-2 text-small-semi uppercase text-ui-fg-subtle transition-colors hover:text-ui-fg-base"
             data-testid="back-to-cart-link"
           >
             <ChevronDown className="rotate-90" size={16} />
-            <span className="mt-px hidden small:block txt-compact-plus text-ui-fg-subtle hover:text-ui-fg-base ">
-              Back to shopping cart
+            <span className="mt-px hidden txt-compact-plus small:block">
+              Назад в корзину
             </span>
-            <span className="mt-px block small:hidden txt-compact-plus text-ui-fg-subtle hover:text-ui-fg-base">
-              Back
+            <span className="mt-px block txt-compact-plus small:hidden">
+              Назад
             </span>
           </LocalizedClientLink>
           <LocalizedClientLink
             href="/"
-            className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+            className="heading-display text-xl uppercase tracking-[0.2em] text-ui-fg-base"
             data-testid="store-link"
           >
-            Medusa Store
+            РАССВЕТ
           </LocalizedClientLink>
           <div className="flex-1 basis-0" />
         </nav>

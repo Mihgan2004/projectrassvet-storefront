@@ -2,6 +2,62 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/*
+ * РАССВЕТ brand design system.
+ * Brand palette is the single source of truth; we remap the Medusa UI preset
+ * CSS variables onto it so every existing `ui-*` utility renders on-brand.
+ * These rules are intentionally unlayered so they win over the preset base layer.
+ */
+:root {
+  --color-bg: #121312;
+  --color-bg-elevated: #181918;
+  --color-red: #ad0013;
+  --color-red-hover: #c40016;
+  --color-gold: #a67d43;
+  --color-gold-hover: #c39a5b;
+  --color-text: #f3ead7;
+  --color-muted: #b8a98f;
+  --color-faint: #8a8068;
+  --color-border: rgba(166, 125, 67, 0.35);
+  --color-border-strong: rgba(166, 125, 67, 0.6);
+  --color-red-soft: rgba(173, 0, 19, 0.18);
+  --color-gold-soft: rgba(166, 125, 67, 0.16);
+
+  /* Medusa UI token remap -> brand palette */
+  --bg-base: var(--color-bg);
+  --bg-base-hover: #1c1d1b;
+  --bg-base-pressed: #222321;
+  --bg-subtle: var(--color-bg-elevated);
+  --bg-subtle-hover: #1f201e;
+  --bg-subtle-pressed: #242523;
+  --bg-component: #1a1b19;
+  --bg-component-hover: #202119;
+  --bg-field: #161715;
+  --bg-field-hover: #1b1c1a;
+  --bg-highlight: var(--color-gold-soft);
+
+  --fg-base: var(--color-text);
+  --fg-subtle: var(--color-muted);
+  --fg-muted: var(--color-faint);
+  --fg-on-color: var(--color-text);
+  --fg-interactive: var(--color-gold);
+  --fg-interactive-hover: var(--color-gold-hover);
+
+  --border-base: var(--color-border);
+  --border-strong: var(--color-border-strong);
+  --border-interactive: var(--color-gold);
+}
+
+html {
+  background-color: var(--color-bg);
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
@@ -35,9 +91,9 @@
   select:-webkit-autofill,
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus {
-    border: 1px solid #212121;
-    -webkit-text-fill-color: #212121;
-    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+    border: 1px solid var(--color-border);
+    -webkit-text-fill-color: var(--color-text);
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-bg-elevated) inset;
     transition: background-color 5000s ease-in-out 0s;
   }
 
@@ -50,12 +106,71 @@
 }
 
 @layer components {
+  /* Shared container: consistent width + horizontal rhythm */
   .content-container {
-    @apply max-w-[1440px] w-full mx-auto px-6;
+    @apply max-w-[1440px] w-full mx-auto px-6 small:px-10;
+  }
+
+  /* Consistent vertical rhythm between major sections */
+  .section-y {
+    @apply py-16 small:py-24;
+  }
+
+  /* Brand buttons -------------------------------------------------------- */
+  .btn-base {
+    @apply inline-flex items-center justify-center gap-x-2 px-6 py-3 rounded-base
+      text-sm font-medium uppercase tracking-wide
+      transition-all duration-200 ease-out
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn-base text-[var(--color-text)];
+    background-color: var(--color-red);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-red-hover);
+    box-shadow: 0 0 0 1px var(--color-red-hover),
+      0 8px 24px -8px rgba(173, 0, 19, 0.7);
+  }
+
+  .btn-secondary {
+    @apply btn-base bg-transparent text-[var(--color-text)];
+    border: 1px solid var(--color-gold);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-gold-soft);
+    border-color: var(--color-gold-hover);
+  }
+
+  /* Brand surfaces ------------------------------------------------------- */
+  .card-brand {
+    @apply rounded-base transition-all duration-200 ease-out;
+    background-color: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+  }
+  .card-brand:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: 0 0 0 1px var(--color-gold-soft),
+      0 12px 32px -16px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Display / heading treatment */
+  .heading-display {
+    @apply font-semibold tracking-tight text-[var(--color-text)];
+  }
+
+  /* Small uppercase eyebrow / label */
+  .eyebrow {
+    @apply text-xs uppercase tracking-[0.25em] text-[var(--color-gold)];
   }
 
   .contrast-btn {
-    @apply px-4 py-2 border border-black rounded-full hover:bg-black hover:text-white transition-colors duration-200 ease-in;
+    @apply px-4 py-2 border rounded-base transition-colors duration-200 ease-in;
+    border-color: var(--color-border);
+  }
+  .contrast-btn:hover {
+    background-color: var(--color-gold-soft);
   }
 
   .text-xsmall-regular {

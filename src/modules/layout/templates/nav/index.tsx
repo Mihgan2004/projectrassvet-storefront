@@ -8,6 +8,13 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
 
+const navLinks = [
+  { label: "Каталог", href: "/store" },
+  { label: "Коллекции", href: "/store" },
+  { label: "О бренде", href: "/about" },
+  { label: "Доставка", href: "/shipping" },
+]
+
 export default async function Nav() {
   const [regions, locales, currentLocale] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
@@ -17,42 +24,55 @@ export default async function Nav() {
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
-      <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
-        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center">
-            <div className="h-full">
-              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
+      <header className="relative h-20 border-b border-ui-border-base bg-[rgba(18,19,18,0.8)] backdrop-blur-xl duration-200">
+        <nav className="content-container flex h-full items-center justify-between text-sm text-ui-fg-subtle">
+          <div className="flex h-full flex-1 basis-0 items-center">
+            <div className="h-full small:hidden">
+              <SideMenu
+                regions={regions}
+                locales={locales}
+                currentLocale={currentLocale}
+              />
+            </div>
+            <div className="hidden small:flex items-center gap-x-8 h-full">
+              {navLinks.map((link) => (
+                <LocalizedClientLink
+                  key={`${link.label}-${link.href}`}
+                  href={link.href}
+                  className="uppercase tracking-wide transition-colors duration-200 hover:text-ui-fg-base"
+                >
+                  {link.label}
+                </LocalizedClientLink>
+              ))}
             </div>
           </div>
 
           <div className="flex items-center h-full">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
+              className="heading-display text-2xl uppercase tracking-[0.2em] text-ui-fg-base"
               data-testid="nav-store-link"
             >
-              Medusa Store
+              РАССВЕТ
             </LocalizedClientLink>
           </div>
 
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
-            <div className="hidden small:flex items-center gap-x-6 h-full">
-              <LocalizedClientLink
-                className="hover:text-ui-fg-base"
-                href="/account"
-                data-testid="nav-account-link"
-              >
-                Account
-              </LocalizedClientLink>
-            </div>
+          <div className="flex flex-1 basis-0 items-center justify-end gap-x-6 h-full">
+            <LocalizedClientLink
+              className="hidden uppercase tracking-wide transition-colors duration-200 hover:text-ui-fg-base small:inline"
+              href="/account"
+              data-testid="nav-account-link"
+            >
+              Аккаунт
+            </LocalizedClientLink>
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex gap-2"
+                  className="flex gap-2 uppercase tracking-wide transition-colors duration-200 hover:text-ui-fg-base"
                   href="/cart"
                   data-testid="nav-cart-link"
                 >
-                  Cart (0)
+                  Корзина (0)
                 </LocalizedClientLink>
               }
             >
