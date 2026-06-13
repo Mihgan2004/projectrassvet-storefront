@@ -1,0 +1,73 @@
+/*
+ * Ported from Codrops "On-Scroll Letter Animations" — Demo 1.
+ * https://github.com/codrops/OnScrollLetterAnimations
+ *
+ * The original splits each title with Splitting.js and, on every Locomotive
+ * Scroll event, translates characters by a scroll-velocity-mapped amount with
+ * the middle characters moving most — giving the word a "bending" wave. We keep
+ * that exact mechanic (see index.tsx) and reproduce the layout here, remapped
+ * to the РАССВЕТ palette.
+ */
+
+.root {
+  position: relative;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.content {
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+.img {
+  will-change: transform;
+  position: relative;
+  height: 65vh;
+  max-width: 600px;
+  width: auto;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  opacity: 0.5;
+  border: 1px solid var(--color-border);
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.text {
+  grid-area: 1 / 1 / 2 / 2;
+  margin: 0;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display, Inter), sans-serif;
+  font-weight: 800;
+  font-size: clamp(3.25rem, 12vw, 7rem);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-text);
+  display: inline-flex;
+}
+
+.text:hover {
+  color: var(--color-gold);
+}
+
+.char {
+  white-space: pre;
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Reduced-motion / no-JS fallback */
+.reduced .content {
+  height: auto;
+  padding: 5rem 1rem;
+}

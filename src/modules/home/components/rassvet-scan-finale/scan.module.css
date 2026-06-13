@@ -1,0 +1,85 @@
+/*
+ * Ported from Codrops "Scanning Effect With Depth Map" — effect1
+ * (github.com/d3adrabbit/ScanningEffectWithDepthMap).
+ *
+ * The original renders with three/webgpu + TSL node materials (WebGPU only).
+ * For broad browser support and storefront performance we port the *exact*
+ * shader graph to a WebGL2 fragment shader (see index.tsx): depth-map pointer
+ * parallax, the 120x tiled cell-noise dot field, and the
+ * `1 - smoothstep(0, 0.02, abs(depth - progress))` scan band, blended over the
+ * image with screen blending. Colors use the РАССВЕТ palette.
+ */
+
+.root {
+  position: relative;
+  width: 100%;
+  background-color: var(--color-bg);
+  overflow: hidden;
+  padding: 6rem 0 7rem;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 90% at 70% 15%, rgba(166, 125, 67, 0.18), transparent 60%),
+    linear-gradient(180deg, #0d0e0d, #121312 55%, #0b0c0b);
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1.5rem;
+  pointer-events: none;
+}
+
+.overlayInner {
+  pointer-events: auto;
+}
+
+.title {
+  font-family: var(--font-display, Inter), sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  font-size: clamp(2rem, 7vw, 5.5rem);
+  color: var(--color-text);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+}
+
+.desc {
+  margin-top: 1rem;
+  font-size: clamp(0.8rem, 1.6vw, 1.1rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}

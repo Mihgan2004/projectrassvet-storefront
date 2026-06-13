@@ -1,12 +1,12 @@
 import { Metadata } from "next"
 
-import FeaturedProducts from "@modules/home/components/featured-products"
-import Hero from "@modules/home/components/hero"
-import CollectionBanner from "@modules/home/components/collection-banner"
-import Manifesto from "@modules/home/components/manifesto"
-import Advantages from "@modules/home/components/advantages"
-import { listCollections } from "@lib/data/collections"
-import { getRegion } from "@lib/data/regions"
+import RassvetSmoothScroll from "@modules/home/components/rassvet-smooth-scroll"
+import RassvetCapsuleHeader from "@modules/home/components/rassvet-capsule-header"
+import RassvetVideoHero from "@modules/home/components/rassvet-video-hero"
+import RassvetOsmoBlock from "@modules/home/components/rassvet-osmo-block"
+import RassvetStickyGrid from "@modules/home/components/rassvet-sticky-grid"
+import RassvetLetterCollections from "@modules/home/components/rassvet-letter-collections"
+import RassvetScanFinale from "@modules/home/components/rassvet-scan-finale"
 
 export const metadata: Metadata = {
   title: "РАССВЕТ — тактическая одежда и ограниченные коллекции",
@@ -14,44 +14,40 @@ export const metadata: Metadata = {
     "Тактическая эстетика, городская форма и ограниченные коллекции одежды РАССВЕТ.",
 }
 
-export default async function Home(props: {
-  params: Promise<{ countryCode: string }>
-}) {
-  const params = await props.params
-
-  const { countryCode } = params
-
-  const region = await getRegion(countryCode)
-
-  const { collections } = await listCollections({
-    fields: "id, handle, title",
-  })
-
-  if (!collections || !region) {
-    return null
-  }
-
+/**
+ * Home page — server composition.
+ *
+ * The page itself does no blocking data fetch: every section below is a
+ * self-contained brand/animation block (placeholder content), so the first
+ * HTML streams immediately. Browser-only animation logic lives inside the
+ * individual "use client" sections; the storefront's Medusa data flows
+ * (cart, account, footer categories) remain on their existing server patterns.
+ */
+export default function Home() {
   return (
     <>
-      <Hero />
+      {/* Smooth scrolling (Lenis) + GSAP ScrollTrigger sync, home only */}
+      <RassvetSmoothScroll />
 
-      <CollectionBanner collection={collections[0]} />
+      {/* 1. Capsule header */}
+      <RassvetCapsuleHeader />
 
-      <section className="content-container section-y">
-        <div className="mb-12 flex flex-col gap-3">
-          <span className="eyebrow">Избранные товары</span>
-          <h2 className="heading-display text-[clamp(1.75rem,4vw,2.75rem)] leading-tight">
-            Отобрано вручную
-          </h2>
-        </div>
-        <ul className="flex flex-col gap-y-20">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
-      </section>
+      {/* 2. Video hero */}
+      <RassvetVideoHero />
 
-      <Manifesto />
+      {/* 3. Osmo parallax image layers */}
+      <RassvetOsmoBlock />
 
-      <Advantages />
+      {/* 4. Sticky grid scroll gallery */}
+      <RassvetStickyGrid />
+
+      {/* 5. On-scroll letter animations / collections */}
+      <RassvetLetterCollections />
+
+      {/* 6. Scan effect finale + CTA */}
+      <RassvetScanFinale />
+
+      {/* 7. Footer is rendered by the (main) layout */}
     </>
   )
 }
