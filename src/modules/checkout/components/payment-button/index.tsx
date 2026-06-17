@@ -1,6 +1,6 @@
 "use client"
 
-import { isManual, isStripeLike } from "@lib/constants"
+import { isManual, isStripeLike, isYookassa } from "@lib/constants"
 import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@medusajs/ui"
@@ -39,10 +39,21 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       return (
         <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
       )
+    case isYookassa(paymentSession?.provider_id):
+      return (
+        <YooKassaPaymentButton
+          notReady={notReady}
+          cart={cart}
+          data-testid={dataTestId}
+        />
+      )
     default:
-      return <Button disabled>Select a payment method</Button>
+      return <Button disabled>Выберите способ оплаты</Button>
   }
 }
+
+const placeOrderButtonClass =
+  "!rounded-rounded !border-0 !bg-[var(--color-red)] !text-[var(--color-text)] w-full uppercase tracking-wide hover:!bg-[var(--color-red-hover)] disabled:!opacity-50"
 
 const StripePaymentButton = ({
   cart,
@@ -138,14 +149,65 @@ const StripePaymentButton = ({
         disabled={disabled || notReady}
         onClick={handlePayment}
         size="large"
+        className={placeOrderButtonClass}
         isLoading={submitting}
         data-testid={dataTestId}
       >
-        Place order
+        Оформить заказ
       </Button>
       <ErrorMessage
         error={errorMessage}
         data-testid="stripe-payment-error-message"
+      />
+    </>
+  )
+}
+
+const YooKassaPaymentButton = ({
+  cart,
+  notReady,
+  "data-testid": dataTestId,
+}: {
+  cart: HttpTypes.StoreCart
+  notReady: boolean
+  "data-testid"?: string
+}) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const session = cart.payment_collection?.payment_sessions?.find(
+    (s) => s.status === "pending"
+  )
+
+  const confirmationUrl =
+    (session?.data?.confirmation_url as string | undefined) ??
+    (session?.data?.confirmationUrl as string | undefined)
+
+  const handlePayment = () => {
+    if (!confirmationUrl) {
+      setErrorMessage("Не удалось получить ссылку на оплату. Попробуйте ещё раз.")
+      return
+    }
+
+    setSubmitting(true)
+    window.location.href = confirmationUrl
+  }
+
+  return (
+    <>
+      <Button
+        disabled={notReady || !confirmationUrl}
+        onClick={handlePayment}
+        size="large"
+        className={placeOrderButtonClass}
+        isLoading={submitting}
+        data-testid={dataTestId}
+      >
+        Оплатить
+      </Button>
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="yookassa-payment-error-message"
       />
     </>
   )
@@ -178,9 +240,10 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
         isLoading={submitting}
         onClick={handlePayment}
         size="large"
+        className={placeOrderButtonClass}
         data-testid="submit-order-button"
       >
-        Place order
+        Оформить заказ
       </Button>
       <ErrorMessage
         error={errorMessage}

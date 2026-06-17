@@ -15,7 +15,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
   return (
     <Table.Row className="w-full" data-testid="product-row">
       <Table.Cell className="!pl-0 p-4 w-24">
-        <div className="flex w-16">
+        <div className="flex w-16 overflow-hidden rounded-soft">
           <Thumbnail thumbnail={item.thumbnail} size="square" />
         </div>
       </Table.Cell>
@@ -34,7 +34,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
         <span className="!pr-0 flex flex-col items-end h-full justify-center">
           <span className="flex gap-x-1 ">
             <Text className="text-ui-fg-muted">
-              <span data-testid="product-quantity">{item.quantity}</span>x{" "}
+              <span data-testid="product-quantity">{item.quantity}</span>×{" "}
             </Text>
             <LineItemUnitPrice
               item={item}

@@ -50,10 +50,12 @@ module.exports = {
       },
       borderRadius: {
         none: "0px",
-        soft: "2px",
-        base: "4px",
-        rounded: "8px",
-        large: "16px",
+        soft: "var(--radius-xs)",
+        base: "var(--radius-sm)",
+        rounded: "var(--radius-md)",
+        large: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+        "2xl": "var(--radius-2xl)",
         circle: "9999px",
       },
       maxWidth: {
@@ -73,7 +75,7 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          "Inter",
+          "var(--font-sans)",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
@@ -83,7 +85,7 @@ module.exports = {
           "sans-serif",
         ],
         display: [
-          "Inter",
+          "var(--font-display)",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",

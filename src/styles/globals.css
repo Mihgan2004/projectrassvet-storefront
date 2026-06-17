@@ -9,31 +9,45 @@
  * These rules are intentionally unlayered so they win over the preset base layer.
  */
 :root {
-  --color-bg: #121312;
-  --color-bg-elevated: #181918;
-  --color-red: #ad0013;
-  --color-red-hover: #c40016;
-  --color-gold: #a67d43;
-  --color-gold-hover: #c39a5b;
-  --color-text: #f3ead7;
-  --color-muted: #b8a98f;
-  --color-faint: #8a8068;
-  --color-border: rgba(166, 125, 67, 0.35);
-  --color-border-strong: rgba(166, 125, 67, 0.6);
-  --color-red-soft: rgba(173, 0, 19, 0.18);
-  --color-gold-soft: rgba(166, 125, 67, 0.16);
+  /* Brand palette — dark base + vibrant orange accent (DirtyLine-inspired) */
+  --color-bg: #0d0d0d;
+  --color-bg-elevated: #161616;
+  /* Primary accent (orange). Kept under the legacy --color-red name so every
+     existing reference stays valid while the hue shifts to orange. */
+  --color-red: #ff4d12;
+  --color-red-hover: #ff6630;
+  /* Secondary accent / eyebrows / interactive (lighter orange). */
+  --color-gold: #ff7a3c;
+  --color-gold-hover: #ff9560;
+  --color-text: #ffffff;
+  --color-muted: #a6a6a6;
+  --color-faint: #6e6e6e;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.24);
+  --color-red-soft: rgba(255, 77, 18, 0.16);
+  --color-gold-soft: rgba(255, 122, 60, 0.14);
+
+  /* Nested radius system — Outer R = Inner R + Padding.
+     Pick an inner radius, add the element's padding to get the outer radius. */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-pill: 9999px;
 
   /* Medusa UI token remap -> brand palette */
   --bg-base: var(--color-bg);
-  --bg-base-hover: #1c1d1b;
-  --bg-base-pressed: #222321;
+  --bg-base-hover: #1a1a1a;
+  --bg-base-pressed: #202020;
   --bg-subtle: var(--color-bg-elevated);
-  --bg-subtle-hover: #1f201e;
-  --bg-subtle-pressed: #242523;
-  --bg-component: #1a1b19;
-  --bg-component-hover: #202119;
-  --bg-field: #161715;
-  --bg-field-hover: #1b1c1a;
+  --bg-subtle-hover: #1c1c1c;
+  --bg-subtle-pressed: #222222;
+  --bg-component: #1a1a1a;
+  --bg-component-hover: #202020;
+  --bg-field: #141414;
+  --bg-field-hover: #1a1a1a;
   --bg-highlight: var(--color-gold-soft);
 
   --fg-base: var(--color-text);
@@ -74,6 +88,8 @@ html.lenis body {
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
 }
 
 @layer utilities {
@@ -135,11 +151,19 @@ body {
   }
 
   /* Brand buttons -------------------------------------------------------- */
+  /* Padding rule: horizontal padding = 2× vertical padding.
+     14px text → 14px top/bottom, 28px sides. Radius from the nested system. */
   .btn-base {
-    @apply inline-flex items-center justify-center gap-x-2 px-6 py-3 rounded-base
+    @apply inline-flex items-center justify-center gap-x-2 py-3.5 px-7
       text-sm font-medium uppercase tracking-wide
+      rounded-[var(--radius-md)]
       transition-all duration-200 ease-out
       disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Full-width on mobile, auto width from sm up (optional helper) */
+  .btn-block-mobile {
+    @apply w-full sm:w-auto;
   }
 
   .btn-primary {
@@ -149,43 +173,44 @@ body {
   .btn-primary:hover:not(:disabled) {
     background-color: var(--color-red-hover);
     box-shadow: 0 0 0 1px var(--color-red-hover),
-      0 8px 24px -8px rgba(173, 0, 19, 0.7);
+      0 8px 24px -8px rgba(255, 77, 18, 0.6);
   }
 
   .btn-secondary {
     @apply btn-base bg-transparent text-[var(--color-text)];
-    border: 1px solid var(--color-gold);
+    border: 1px solid var(--color-border-strong);
   }
   .btn-secondary:hover:not(:disabled) {
     background-color: var(--color-gold-soft);
-    border-color: var(--color-gold-hover);
+    border-color: var(--color-gold);
   }
 
   /* Brand surfaces ------------------------------------------------------- */
+  /* Outer R = Inner R + Padding → card uses --radius-lg (16). */
   .card-brand {
-    @apply rounded-base transition-all duration-200 ease-out;
+    @apply rounded-[var(--radius-lg)] transition-all duration-200 ease-out;
     background-color: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
   }
   .card-brand:hover {
     border-color: var(--color-border-strong);
     box-shadow: 0 0 0 1px var(--color-gold-soft),
-      0 12px 32px -16px rgba(0, 0, 0, 0.8);
+      0 12px 32px -16px rgba(0, 0, 0, 0.85);
   }
 
   /* Display / heading treatment */
   .heading-display {
-    @apply font-semibold tracking-tight text-[var(--color-text)];
+    @apply font-display font-extrabold tracking-tight text-[var(--color-text)];
   }
 
   /* Small uppercase eyebrow / label */
   .eyebrow {
-    @apply text-xs uppercase tracking-[0.25em] text-[var(--color-gold)];
+    @apply font-display text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-gold)];
   }
 
   .contrast-btn {
-    @apply px-4 py-2 border rounded-base transition-colors duration-200 ease-in;
-    border-color: var(--color-border);
+    @apply px-5 py-2.5 border rounded-[var(--radius-md)] transition-colors duration-200 ease-in;
+    border-color: var(--color-border-strong);
   }
   .contrast-btn:hover {
     background-color: var(--color-gold-soft);

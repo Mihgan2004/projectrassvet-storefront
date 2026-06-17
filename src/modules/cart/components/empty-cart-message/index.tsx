@@ -4,19 +4,22 @@ import InteractiveLink from "@modules/common/components/interactive-link"
 
 const EmptyCartMessage = () => {
   return (
-    <div className="py-48 px-2 flex flex-col justify-center items-start" data-testid="empty-cart-message">
+    <div
+      className="flex flex-col items-start justify-center px-2 py-48"
+      data-testid="empty-cart-message"
+    >
       <Heading
         level="h1"
-        className="flex flex-row text-3xl-regular gap-x-2 items-baseline"
+        className="heading-display flex flex-row items-baseline gap-x-2 text-[clamp(2rem,4vw,3rem)] text-[var(--color-text)]"
       >
-        Cart
+        Корзина
       </Heading>
-      <Text className="text-base-regular mt-4 mb-6 max-w-[32rem]">
-        You don&apos;t have anything in your cart. Let&apos;s change that, use
-        the link below to start browsing our products.
+      <Text className="mb-6 mt-4 max-w-[32rem] text-base leading-relaxed text-[var(--color-muted)]">
+        В корзине пока пусто. Самое время это исправить — перейдите в каталог и
+        выберите что-нибудь.
       </Text>
       <div>
-        <InteractiveLink href="/store">Explore products</InteractiveLink>
+        <InteractiveLink href="/store">Перейти в каталог</InteractiveLink>
       </div>
     </div>
   )

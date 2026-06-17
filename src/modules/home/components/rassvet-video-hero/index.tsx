@@ -1,62 +1,86 @@
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { widePlaceholder } from "../_lib/placeholders"
+'use client';
 
-/**
- * Premium video hero. Uses a native <video> (autoplay/muted/loop/playsInline)
- * with a brand gradient poster fallback so it degrades gracefully when the
- * media file is not present yet. A darkening overlay keeps text legible.
- *
- * TODO (content): drop a real clip at /public/rassvet-hero.mp4 (+ .webm) to
- * replace the placeholder background.
- */
-export default function RassvetVideoHero() {
-  const poster = widePlaceholder("РАССВЕТ", "red")
+import { useContext } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+import LocalizedClientLink from '@modules/common/components/localized-client-link';
+import { WebGPUCanvas } from '@modules/home/components/scanning-effect/canvas';
+import { PostProcessing } from '@modules/home/components/scanning-effect/post-processing';
+import { Scene } from '@modules/home/components/scanning-effect/scene';
+import {
+  ContextProvider,
+  GlobalContext,
+} from '@modules/home/components/scanning-effect/context';
+
+const HeroContent = () => {
+  const { isLoading } = useContext(GlobalContext);
+
+  useGSAP(() => {
+    if (!isLoading) {
+      gsap
+        .timeline()
+        .to('[data-scan-loader]', {
+          opacity: 0,
+        })
+        .from('[data-scan-title]', {
+          yPercent: -100,
+          stagger: {
+            each: 0.15,
+          },
+          ease: 'power1.out',
+        })
+        .from('[data-scan-desc]', {
+          opacity: 0,
+          yPercent: 100,
+        })
+        .from('[data-scan-actions]', {
+          opacity: 0,
+          y: 24,
+          ease: 'power1.out',
+        });
+    }
+  }, [isLoading]);
 
   return (
-    <section className="relative h-[100svh] w-full overflow-hidden bg-[var(--color-bg)]">
-      {/* Video / fallback background */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster={poster}
+    <>
+      <div
+        className="pointer-events-none absolute inset-0 z-[90] flex h-svh w-full items-center justify-center bg-[#0d0e0d]"
+        data-scan-loader
       >
-        <source src="/rassvet-hero.webm" type="video/webm" />
-        <source src="/rassvet-hero.mp4" type="video/mp4" />
-      </video>
+        <div className="h-6 w-6 animate-ping rounded-full bg-[var(--color-accent)]" />
+      </div>
 
-      {/* Darkening + brand overlays */}
       <div
         aria-hidden
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0 z-[55]"
         style={{
           background:
-            "linear-gradient(180deg, rgba(13,14,13,0.55) 0%, rgba(18,19,18,0.35) 40%, rgba(11,12,11,0.92) 100%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(90deg, #f3ead7 0px, #f3ead7 1px, transparent 1px, transparent 90px)",
+            'linear-gradient(180deg, rgba(13,14,13,0.45) 0%, rgba(18,19,18,0.2) 40%, rgba(11,12,11,0.85) 100%)',
         }}
       />
 
-      {/* Content */}
-      <div className="content-container relative z-10 flex h-full flex-col justify-end pb-20 small:pb-28">
-        <div className="max-w-3xl">
-          <span className="eyebrow">Limited tactical wear</span>
-          <h1 className="heading-display mt-5 text-[clamp(3rem,11vw,9rem)] leading-[0.9] tracking-tight">
+      <div className="content-container pointer-events-none absolute inset-0 z-[60] flex h-svh flex-col justify-end pb-20 small:pb-28">
+        <div className="pointer-events-auto max-w-3xl">
+          <span className="eyebrow" data-scan-title>
+            Limited tactical wear
+          </span>
+          <h1
+            className="heading-display mt-5 overflow-hidden text-[clamp(3rem,11vw,9rem)] leading-[0.9] tracking-tight"
+            data-scan-title
+          >
             РАССВЕТ
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--color-muted)] small:text-lg">
+          <p
+            className="mt-6 max-w-xl overflow-hidden text-base leading-relaxed text-[var(--color-muted)] small:text-lg"
+            data-scan-desc
+          >
             Тактическая эстетика. Городская форма. Ограниченные коллекции.
           </p>
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+          <div
+            className="mt-9 flex flex-col gap-4 sm:flex-row"
+            data-scan-actions
+          >
             <LocalizedClientLink href="/store" className="btn-primary">
               Перейти в каталог
             </LocalizedClientLink>
@@ -66,13 +90,28 @@ export default function RassvetVideoHero() {
           </div>
         </div>
       </div>
+    </>
+  );
+};
 
-      {/* Bottom seam to blend into next section */}
+export default function RassvetVideoHero() {
+  return (
+    <section className="relative h-[100svh] w-full overflow-hidden bg-[var(--color-bg)]">
+      <ContextProvider>
+        <div className="h-svh">
+          <HeroContent />
+          <WebGPUCanvas>
+            <PostProcessing></PostProcessing>
+            <Scene></Scene>
+          </WebGPUCanvas>
+        </div>
+      </ContextProvider>
+
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-px"
-        style={{ backgroundColor: "var(--color-border)" }}
+        className="absolute inset-x-0 bottom-0 z-[70] h-px"
+        style={{ backgroundColor: 'var(--color-border)' }}
       />
     </section>
-  )
+  );
 }

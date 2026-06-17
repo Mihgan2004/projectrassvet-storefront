@@ -16,9 +16,9 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
   return (
     <div>
       <Text>
-        We have sent the order confirmation details to{" "}
+        Мы отправили подтверждение заказа на{" "}
         <span
-          className="text-ui-fg-medium-plus font-semibold"
+          className="font-semibold text-[var(--color-text)]"
           data-testid="order-email"
         >
           {order.email}
@@ -26,29 +26,29 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
         .
       </Text>
       <Text className="mt-2">
-        Order date:{" "}
+        Дата заказа:{" "}
         <span data-testid="order-date">
-          {new Date(order.created_at).toDateString()}
+          {new Date(order.created_at).toLocaleDateString("ru-RU")}
         </span>
       </Text>
-      <Text className="mt-2 text-ui-fg-interactive">
-        Order number: <span data-testid="order-id">{order.display_id}</span>
+      <Text className="mt-2 text-[var(--color-gold)]">
+        Номер заказа: <span data-testid="order-id">{order.display_id}</span>
       </Text>
 
-      <div className="flex items-center text-compact-small gap-x-4 mt-4">
+      <div className="mt-4 flex items-center gap-x-4 text-compact-small">
         {showStatus && (
           <>
             <Text>
-              Order status:{" "}
-              <span className="text-ui-fg-subtle " data-testid="order-status">
+              Статус заказа:{" "}
+              <span className="text-ui-fg-subtle" data-testid="order-status">
                 {formatStatus(order.fulfillment_status)}
               </span>
             </Text>
             <Text>
-              Payment status:{" "}
+              Статус оплаты:{" "}
               <span
-                className="text-ui-fg-subtle "
-                sata-testid="order-payment-status"
+                className="text-ui-fg-subtle"
+                data-testid="order-payment-status"
               >
                 {formatStatus(order.payment_status)}
               </span>

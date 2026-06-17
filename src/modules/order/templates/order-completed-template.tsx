@@ -22,23 +22,26 @@ export default async function OrderCompletedTemplate({
   const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
 
   return (
-    <div className="py-6 min-h-[calc(100vh-64px)]">
-      <div className="content-container flex flex-col justify-center items-center gap-y-10 max-w-4xl h-full w-full">
+    <div className="section-y min-h-[calc(100vh-64px)]">
+      <div className="content-container mx-auto flex h-full w-full max-w-4xl flex-col items-center justify-center gap-y-10">
         {isOnboarding && <OnboardingCta orderId={order.id} />}
         <div
-          className="flex flex-col gap-4 max-w-4xl h-full bg-white w-full py-10"
+          className="card-brand flex h-full w-full max-w-4xl flex-col gap-6 p-6 small:p-10"
           data-testid="order-complete-container"
         >
           <Heading
             level="h1"
-            className="flex flex-col gap-y-3 text-ui-fg-base text-3xl mb-4"
+            className="heading-display mb-2 flex flex-col gap-y-2 text-[clamp(1.75rem,3vw,2.5rem)] leading-tight text-[var(--color-text)]"
           >
-            <span>Thank you!</span>
-            <span>Your order was placed successfully.</span>
+            <span>Спасибо!</span>
+            <span>Ваш заказ успешно оформлен.</span>
           </Heading>
           <OrderDetails order={order} />
-          <Heading level="h2" className="flex flex-row text-3xl-regular">
-            Summary
+          <Heading
+            level="h2"
+            className="heading-display text-xl text-[var(--color-text)]"
+          >
+            Состав заказа
           </Heading>
           <Items order={order} />
           <CartTotals totals={order} />

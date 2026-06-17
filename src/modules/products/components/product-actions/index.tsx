@@ -172,7 +172,7 @@ export default function ProductActions({
             !isValidVariant
           }
           variant="primary"
-          className="h-12 w-full !rounded-base !border-0 !bg-[var(--color-red)] !text-[var(--color-text)] uppercase tracking-wide transition-colors duration-200 hover:!bg-[var(--color-red-hover)] disabled:!opacity-50"
+          className="h-12 w-full !rounded-rounded !border-0 !bg-[var(--color-red)] !text-[var(--color-text)] uppercase tracking-wide transition-colors duration-200 hover:!bg-[var(--color-red-hover)] disabled:!opacity-50"
           isLoading={isAdding}
           data-testid="add-product-button"
         >

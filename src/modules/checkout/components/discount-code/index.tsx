@@ -56,17 +56,17 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
   }
 
   return (
-    <div className="w-full bg-white flex flex-col">
-      <div className="txt-medium">
-        <form action={(a) => addPromotionCode(a)} className="w-full mb-5">
-          <Label className="flex gap-x-1 my-2 items-center">
+    <div className="flex w-full flex-col">
+      <div className="text-sm">
+        <form action={(a) => addPromotionCode(a)} className="mb-5 w-full">
+          <Label className="my-2 flex items-center gap-x-1">
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="txt-medium text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+              className="text-sm text-[var(--color-gold)] transition-colors hover:text-[var(--color-gold-hover)]"
               data-testid="add-discount-button"
             >
-              Add Promotion Code(s)
+              Добавить промокод
             </button>
 
             {/* <Tooltip content="You can add multiple promotion codes">
@@ -89,7 +89,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                   variant="secondary"
                   data-testid="discount-apply-button"
                 >
-                  Apply
+                  Применить
                 </SubmitButton>
               </div>
 
@@ -104,8 +104,8 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
         {promotions.length > 0 && (
           <div className="w-full flex items-center">
             <div className="flex flex-col w-full">
-              <Heading className="txt-medium mb-2">
-                Promotion(s) applied:
+              <Heading className="mb-2 text-sm text-[var(--color-text)]">
+                Применённые промокоды:
               </Heading>
 
               {promotions.map((promotion) => {
