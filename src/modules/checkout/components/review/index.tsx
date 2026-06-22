@@ -4,8 +4,10 @@ import { Heading, Text, clx } from "@medusajs/ui"
 
 import PaymentButton from "../payment-button"
 import { useSearchParams } from "next/navigation"
+import { CdekShippingSummary } from "@modules/checkout/components/cdek-shipping/summary"
+import { HttpTypes } from "@medusajs/types"
 
-const Review = ({ cart }: { cart: any }) => {
+const Review = ({ cart }: { cart: HttpTypes.StoreCart }) => {
   const searchParams = useSearchParams()
 
   const isOpen = searchParams.get("step") === "review"
@@ -35,6 +37,12 @@ const Review = ({ cart }: { cart: any }) => {
       </div>
       {isOpen && previousStepsCompleted && (
         <>
+          {(cart.shipping_methods?.at(-1)?.data as { delivery_type?: string })
+            ?.delivery_type && (
+            <div className="mb-6">
+              <CdekShippingSummary cart={cart} />
+            </div>
+          )}
           <div className="mb-6 flex w-full items-start gap-x-1">
             <div className="w-full">
               <Text className="txt-medium-plus text-ui-fg-base mb-1">

@@ -3,10 +3,13 @@
 import { Radio, RadioGroup } from "@headlessui/react"
 import { setShippingMethod } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
+import { isCdekShippingOption } from "@lib/util/cdek"
 import { convertToLocale } from "@lib/util/money"
 import { CheckCircleSolid, Loader } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { Button, clx, Heading, Text } from "@medusajs/ui"
+import CdekShipping from "@modules/checkout/components/cdek-shipping"
+import { CdekShippingSummary } from "@modules/checkout/components/cdek-shipping/summary"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import MedusaRadio from "@modules/common/components/radio"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
@@ -59,6 +62,7 @@ const Shipping: React.FC<ShippingProps> = ({
     Record<string, number>
   >({})
   const [error, setError] = useState<string | null>(null)
+  const [cdekLoading, setCdekLoading] = useState(false)
   const [shippingMethodId, setShippingMethodId] = useState<string | null>(
     cart.shipping_methods?.at(-1)?.shipping_option_id || null
   )
@@ -85,6 +89,7 @@ const Shipping: React.FC<ShippingProps> = ({
     if (_shippingMethods?.length) {
       const promises = _shippingMethods
         .filter((sm) => sm.price_type === "calculated")
+        .filter((sm) => !isCdekShippingOption(sm))
         .map((sm) => calculatePriceForShippingOption(sm.id, cart.id))
 
       if (promises.length) {
@@ -125,6 +130,13 @@ const Shipping: React.FC<ShippingProps> = ({
       setShowPickupOptions(PICKUP_OPTION_OFF)
     }
 
+    if (isCdekShippingOption(
+      availableShippingMethods?.find((option) => option.id === id) ?? {}
+    )) {
+      setShippingMethodId(id)
+      return
+    }
+
     let currentId: string | null = null
     setIsLoading(true)
     setShippingMethodId((prev) => {
@@ -146,6 +158,17 @@ const Shipping: React.FC<ShippingProps> = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+  const selectedOption = availableShippingMethods?.find(
+    (option) => option.id === shippingMethodId
+  )
+  const selectedIsCdek =
+    !!selectedOption && isCdekShippingOption(selectedOption)
+  const isCdekConfigured =
+    selectedIsCdek &&
+    !!cart.shipping_methods?.at(-1)?.data &&
+    !!(cart.shipping_methods.at(-1)?.data as { cdek_city_code?: number })
+      ?.cdek_city_code
 
   return (
     <div className="card-brand p-6 small:p-8">
@@ -240,7 +263,9 @@ const Shipping: React.FC<ShippingProps> = ({
                   }}
                 >
                   {_shippingMethods?.map((option) => {
+                    const isCdekOption = isCdekShippingOption(option)
                     const isDisabled =
+                      !isCdekOption &&
                       option.price_type === "calculated" &&
                       !isLoadingPrices &&
                       typeof calculatedPricesMap[option.id] !== "number"
@@ -275,6 +300,15 @@ const Shipping: React.FC<ShippingProps> = ({
                               amount: option.amount!,
                               currency_code: cart?.currency_code,
                             })
+                          ) : isCdekOption ? (
+                            shippingMethodId === option.id && isCdekConfigured ? (
+                              convertToLocale({
+                                amount: cart.shipping_methods?.at(-1)?.amount ?? 0,
+                                currency_code: cart?.currency_code,
+                              })
+                            ) : (
+                              "от ..."
+                            )
                           ) : calculatedPricesMap[option.id] ? (
                             convertToLocale({
                               amount: calculatedPricesMap[option.id],
@@ -293,6 +327,17 @@ const Shipping: React.FC<ShippingProps> = ({
               </div>
             </div>
           </div>
+
+          {selectedOption && selectedIsCdek && (
+            <CdekShipping
+              cart={cart}
+              option={selectedOption}
+              isSelected={selectedIsCdek}
+              onSelect={(id) => setShippingMethodId(id)}
+              onError={setError}
+              onLoadingChange={setCdekLoading}
+            />
+          )}
 
           {showPickupOptions === PICKUP_OPTION_ON && (
             <div className="grid">
@@ -371,8 +416,11 @@ const Shipping: React.FC<ShippingProps> = ({
               size="large"
               className="!rounded-rounded !border-0 !bg-[var(--color-red)] !text-[var(--color-text)] uppercase tracking-wide hover:!bg-[var(--color-red-hover)]"
               onClick={handleSubmit}
-              isLoading={isLoading}
-              disabled={!cart.shipping_methods?.[0]}
+              isLoading={isLoading || cdekLoading}
+              disabled={
+                !cart.shipping_methods?.[0] ||
+                (selectedIsCdek && !isCdekConfigured)
+              }
               data-testid="submit-delivery-option-button"
             >
               Перейти к оплате
@@ -383,17 +431,24 @@ const Shipping: React.FC<ShippingProps> = ({
         <div>
           <div className="text-small-regular">
             {cart && (cart.shipping_methods?.length ?? 0) > 0 && (
-              <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Способ
-                </Text>
-                <Text className="txt-medium text-ui-fg-subtle">
-                  {cart.shipping_methods!.at(-1)!.name}{" "}
-                  {convertToLocale({
-                    amount: cart.shipping_methods!.at(-1)!.amount!,
-                    currency_code: cart?.currency_code,
-                  })}
-                </Text>
+              <div className="flex flex-col w-full max-w-md gap-y-3">
+                {(cart.shipping_methods?.at(-1)?.data as { delivery_type?: string })
+                  ?.delivery_type ? (
+                  <CdekShippingSummary cart={cart} />
+                ) : (
+                  <div className="flex flex-col w-1/3">
+                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
+                      Способ
+                    </Text>
+                    <Text className="txt-medium text-ui-fg-subtle">
+                      {cart.shipping_methods!.at(-1)!.name}{" "}
+                      {convertToLocale({
+                        amount: cart.shipping_methods!.at(-1)!.amount!,
+                        currency_code: cart?.currency_code,
+                      })}
+                    </Text>
+                  </div>
+                )}
               </div>
             )}
           </div>
