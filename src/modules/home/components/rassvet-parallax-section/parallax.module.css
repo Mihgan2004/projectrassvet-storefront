@@ -1,0 +1,93 @@
+.section {
+  position: relative;
+  width: 100%;
+  background-color: #000;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.layers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: #000;
+}
+
+.layer {
+  position: absolute;
+  top: -18%;
+  left: 0;
+  width: 100%;
+  height: 118%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transform-origin: center center;
+}
+
+.titleLayer {
+  z-index: 1;
+  will-change: transform;
+}
+
+.peopleLayer {
+  z-index: 2;
+  /*
+   * JPEG has opaque black above the soldiers; lighten lets the title layer
+   * show through those pixels while keeping the foreground figures visible.
+   */
+  mix-blend-mode: lighten;
+  will-change: transform;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 90% 75% at 50% 48%,
+      transparent 42%,
+      rgba(0, 0, 0, 0.28) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.12) 0%,
+      transparent 24%,
+      transparent 78%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+}
+
+@media (max-width: 768px) {
+  .layer {
+    top: -12%;
+    height: 112%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleLayer,
+  .peopleLayer {
+    will-change: auto;
+  }
+}

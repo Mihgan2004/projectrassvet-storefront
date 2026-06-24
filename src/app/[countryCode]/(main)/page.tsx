@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import RassvetSmoothScroll from "@modules/home/components/rassvet-smooth-scroll"
 import RassvetVideoHero from "@modules/home/components/rassvet-video-hero"
 import RassvetArchReveal from "@modules/home/components/rassvet-arch-reveal"
-import RassvetZoomPin from "@modules/home/components/rassvet-zoom-pin"
+import RassvetParallaxSection from "@modules/home/components/rassvet-parallax-section"
 import RassvetCategories from "@modules/home/components/rassvet-categories"
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function Home() {
       <RassvetSmoothScroll />
       <RassvetVideoHero />
       <RassvetArchReveal />
-      <RassvetZoomPin />
+      <RassvetParallaxSection />
       <RassvetCategories />
     </>
   )

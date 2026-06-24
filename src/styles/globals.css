@@ -150,6 +150,23 @@ body {
     @apply py-16 small:py-24;
   }
 
+  .capsule-btn-icon {
+    @apply inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md border border-transparent bg-transparent text-white/55 transition-colors duration-200;
+  }
+
+  .capsule-btn-icon:hover {
+    @apply border-white/[0.08] bg-white/[0.06];
+  }
+
+  .capsule-btn-icon:focus {
+    outline: none;
+  }
+
+  .capsule-btn-icon:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.45);
+    outline-offset: 3px;
+  }
+
   /* Brand buttons -------------------------------------------------------- */
   /* Padding rule: horizontal padding = 2× vertical padding.
      14px text → 14px top/bottom, 28px sides. Radius from the nested system. */
